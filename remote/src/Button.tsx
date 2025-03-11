@@ -9,7 +9,7 @@ export function Button() {
 
   return (
     <div>
-      <h2>Remote Button 123</h2>
+      <h2>Remote Button</h2>
       <div>
         <button onClick={() => setCount(count + 1)}>Increment {count}</button>
       </div>

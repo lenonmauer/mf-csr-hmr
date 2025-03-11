@@ -1,19 +1,24 @@
-import path from 'path'
-import { ModuleFederationPlugin } from '@module-federation/enhanced/webpack'
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
-import webpack from 'webpack'
+import path from "path";
+import { ModuleFederationPlugin } from "@module-federation/enhanced/webpack";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import webpack from "webpack";
 
-const __dirname = process.cwd()
+const __dirname = process.cwd();
 
 export default {
   entry: {
-    bundle: ["webpack-hot-middleware/client?reload=false&noInfo=true", './src/index.ts']
+    bundle: [
+      "webpack-hot-middleware/client?reload=true&noInfo=true&path=http://localhost:3000/__webpack_hmr_shell",
+      "./src/index.ts",
+    ],
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    uniqueName: "shell",
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
     clean: true,
-    publicPath: 'http://localhost:3000/',
+    // publicPath: "http://localhost:3000/",
+    publicPath: "auto",
   },
   module: {
     rules: [
@@ -22,13 +27,13 @@ export default {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'swc-loader',
+            loader: "swc-loader",
             options: {
               jsc: {
                 parser: {
                   syntax: "typescript",
                   tsx: true,
-                  dynamicImport: true
+                  dynamicImport: true,
                 },
                 transform: {
                   react: {
@@ -43,24 +48,24 @@ export default {
       },
     ],
   },
-  mode: 'development',
+  mode: "development",
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.mjs'],
+    extensions: [".tsx", ".ts", ".js", ".mjs"],
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new ReactRefreshWebpackPlugin(),
     new ModuleFederationPlugin({
-      name: 'shell',
+      name: "shell",
       shared: [
         {
-          react: '19.0.0',
-          'react-dom': '19.0.0',
-        }
+          react: "19.0.0",
+          "react-dom": "19.0.0",
+        },
       ],
       remotes: {
-        app2: 'app2@http://localhost:3001/static/mf-manifest.json'
-      }
+        app2: "app2@http://localhost:3001/static/mf-manifest.json",
+      },
     }),
-  ]
+  ],
 };

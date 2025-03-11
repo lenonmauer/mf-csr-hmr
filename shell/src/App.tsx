@@ -1,6 +1,6 @@
 import React, { useEffect, useState, lazy } from "react";
 
-// const App2Button = lazy(() => import("app2/Button"));
+const App2Button = lazy(() => import("app2/Button"));
 
 export default function Button() {
   const [count, setCount] = useState(0);
@@ -17,7 +17,7 @@ export default function Button() {
           Shell Button {count}
         </button>
 
-        {/* <App2Button /> */}
+        <App2Button />
       </div>
     </div>
   );

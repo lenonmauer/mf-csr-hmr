@@ -1,12 +1,15 @@
-import path from 'path'
-import { ModuleFederationPlugin } from '@module-federation/enhanced/webpack'
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
-import webpack from 'webpack'
+import path from "path";
+import { ModuleFederationPlugin } from "@module-federation/enhanced/webpack";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import webpack from "webpack";
 
-const __dirname = process.cwd()
+const __dirname = process.cwd();
 
 export default {
-  entry: ["webpack-hot-middleware/client?reload=false&noInfo=true", './src/index.ts'],
+  entry: [
+    "webpack-hot-middleware/client?reload=true&noInfo=true&path=http://localhost:3001/__webpack_hmr_app2",
+    "./src/index.ts",
+  ],
   module: {
     rules: [
       {
@@ -14,13 +17,13 @@ export default {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'swc-loader',
+            loader: "swc-loader",
             options: {
               jsc: {
                 parser: {
                   syntax: "typescript",
                   tsx: true,
-                  dynamicImport: true
+                  dynamicImport: true,
                 },
                 transform: {
                   react: {
@@ -35,31 +38,36 @@ export default {
       },
     ],
   },
-  mode: 'development',
+  mode: "development",
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.mjs'],
+    extensions: [".tsx", ".ts", ".js", ".mjs"],
+  },
+  optimization: {
+    // runtimeChunk: "single",
   },
   output: {
-    filename: '[name]-[contenthash].js',
-    path: path.resolve(__dirname, 'dist'),
+    uniqueName: "app2",
+    // filename: "[name]-[contenthash].js",
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
     clean: true,
-    publicPath: 'http://localhost:3001/static/',
+    publicPath: "auto",
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'app2',
+      name: "app2",
       dts: false,
       shared: [
         {
-          react: '19.0.0',
-          'react-dom': '19.0.0',
-        }
+          react: "19.0.0",
+          "react-dom": "19.0.0",
+        },
       ],
       exposes: {
-        './Button': './src/Button.tsx'
-      }
+        "./Button": "./src/Button.tsx",
+      },
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new ReactRefreshWebpackPlugin()
-  ]
+    new ReactRefreshWebpackPlugin(),
+  ],
 };
