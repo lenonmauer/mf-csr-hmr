@@ -1,5 +1,5 @@
 {
-  "name": "shell",
+  "name": "app2",
   "scripts": {
     "dev": "sh scripts/dev.sh"
   },
